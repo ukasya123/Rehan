@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QUIZ UKASYA - Seberapa Kenal Lu?</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f0f0f;color:#fff;font-family:Arial;padding:20px;text-align:center}
+.card{background:#1a1a1a;border:1px solid #333;border-radius:20px;padding:20px;max-width:380px;margin:0 auto}
+h1{font-size:26px}
+.sub{color:#999;font-size:13px;margin:10px 0 20px}
+.q{font-size:20px;font-weight:900;margin-bottom:15px;text-align:left}
+.opt{background:#222;border:2px solid #333;border-radius:12px;padding:14px;margin-bottom:10px;text-align:left;font-size:16px;cursor:pointer}
+.opt:active{background:#333}
+.bar{height:8px;background:#222;border-radius:10px;margin-bottom:15px;overflow:hidden}
+.fill{height:100%;background:#ff0055;width:0%;transition:0.3s}
+button{margin-top:10px;background:#ff0055;color:#fff;border:none;padding:15px;width:100%;border-radius:12px;font-size:18px;font-weight:900}
+button.green{background:#00ff00;color:#000}
+.score{font-size:60px;margin:10px 0}
+.hidden{display:none}
+</style></head>
+<body>
+
+<div class="card" id="start">
+<div style="font-size:70px">🤔</div>
+<h1>QUIZ UKASYA</h1>
+<p class="sub">Seberapa kenal lu sama <b>UKASYA</b>?<br>Jawab jujur! Kalau nilai lu jelek, lu bukan temen sejati!</p>
+<p style="background:#222;padding:10px;border-radius:10px;font-size:13px">📝 8 Pertanyaan • ⏰ No Nyotek!<br>😈 Kalau salah = KENA HUKUMAN</p>
+<button onclick="mulai()">MULAI QUIZ ▶️</button>
+<p style="font-size:11px;color:#666;margin-top:10px">Dibuat oleh UKASYA GANTENG 😎</p>
+</div>
+
+<div class="card hidden" id="quiz">
+<p style="text-align:left;font-size:12px;color:#aaa">Soal <span id="no">1</span>/8 • Skor: <span id="skor">0</span></p>
+<div class="bar"><div class="fill" id="bar"></div></div>
+<div class="q" id="pertanyaan"></div>
+<div id="pilihan"></div>
+</div>
+
+<div class="card hidden" id="hasil">
+<div id="emojiHasil" style="font-size:70px"></div>
+<h1 id="judulHasil"></h1>
+<p id="teksHasil" style="margin:15px 0;line-height:1.5"></p>
+<div class="score" id="nilaiAkhir"></div>
+<p style="font-size:12px;color:#999">Share nilai lu ke UKASYA!</p>
+<button class="green" onclick="location.reload()">🔁 ULANGI QUIZ</button>
+<button onclick="prank()">😈 LIAT HUKUMAN</button>
+</div>
+
+<div class="card hidden" id="hukuman">
+<div style="font-size:70px">💀</div>
+<h1 style="color:red">KENA PRANK!</h1>
+<p style="margin:15px 0">Padahal dari tadi ini bukan quiz,<br>ini PRANK dari UKASYA! 🤣<br><br>HP lu aman, tapi lu udah ketipu!</p>
+<button onclick="location.reload()">KIRIM KE TEMEN LAIN ▶️</button>
+</div>
+
+<script>
+let soal=[
+{q:"Siapa orang paling ganteng di dunia ini?",a:["Ukasya","Ronaldo","Jungkook","Bapak lu"],benar:0},
+{q:"Ukasya itu orangnya gimana?",a:["Ganteng + Baik + Pinter","Sombong","Jelek","Ga kenal"],benar:0},
+{q:"Kalau Ukasya ulang tahun, lu harus ngasih apa?",a:["Kado + Traktir + Puji-puji","Cuma bilang HBD","Lupa","Pura-pura ga tau"],benar:0},
+{q:"Siapa yang paling jago nge-prank?",a:["Ukasya Ganteng","Temen lu","Guru BK","Ga ada"],benar:0},
+{q:"Ukasya kalau marah, lu harus ngapain?",a:["Minta maaf + traktir cilok","Kabur","Lawan","Cuekin"],benar:0},
+{q:"Ukasya suka makan apa?",a:["Semua yang lu traktirin","Ga suka makan","Batu","Rumput"],benar:0},
+{q:"Kalau ada yang jelek-jelekin Ukasya, lu harus?",a:["Bela Ukasya mati-matian","Ikutan ngeledekin","Diam aja","Ketawa"],benar:0},
+{q:"Ukasya itu temen yang...?",a:["Terbaik sedunia, ga ada lawan!","Biasa aja","Nyebelin","Siapa sih?"],benar:0},
+];
+let idx=0, skor=0;
+function mulai(){document.getElementById('start').classList.add('hidden');document.getElementById('quiz').classList.remove('hidden');tampil();}
+function tampil(){
+document.getElementById('no').innerText=idx+1;
+document.getElementById('skor').innerText=skor;
+document.getElementById('bar').style.width=(idx/8*100)+'%';
+document.getElementById('pertanyaan').innerText=soal[idx].q;
+let p=document.getElementById('pilihan');p.innerHTML='';
+soal[idx].a.forEach((jawaban,i)=>{
+let d=document.createElement('div');d.className='opt';d.innerText=(i+1)+'. '+jawaban;
+d.onclick=function(){jawab(i)};p.appendChild(d);
+});
+}
+function jawab(i){
+if(i==soal[idx].benar) skor+=12;
+if(navigator.vibrate) navigator.vibrate(100);
+idx++;
+if(idx<soal.length) tampil();
+else selesai();
+}
+function selesai(){
+document.getElementById('quiz').classList.add('hidden');
+let h=document.getElementById('hasil');h.classList.remove('hidden');
+let nilai=skor+4;
+document.getElementById('nilaiAkhir').innerText=nilai+'/100';
+let e=document.getElementById('emojiHasil'),j=document.getElementById('judulHasil'),t=document.getElementById('teksHasil');
+if(nilai>=90){e.innerText='👑';j.innerText='BESTIE SEJATI UKASYA!';t.innerHTML='Gila lu kenal banget sama Ukasya! Lu layak jadi sahabat seumur hidup Ukasya. Ukasya sayang lu! ❤️';}
+else if(nilai>=60){e.innerText='😎';j.innerText='LUMAYAN KENAL';t.innerHTML='Lumayan lah, lu kenal Ukasya tapi masih kurang deket. Sering-sering main bareng Ukasya biar makin kenal!';}
+else{e.innerText='🤡';j.innerText='LU SIAPA SIH?';t.innerHTML='Parah! Nilai lu kecil banget. Lu ngaku temen Ukasya tapi ga kenal sama sekali! Mulai sekarang traktir Ukasya dulu biar kenal!';}
+}
+function prank(){document.getElementById('hasil').classList.add('hidden');document.getElementById('hukuman').classList.remove('hidden');if(navigator.vibrate) navigator.vibrate([300,100,300]);}
+</script>
+</body></html>
